@@ -127,7 +127,9 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'debug_toolbar',
     'accounts',
-    'base'
+    'base',
+    'dashboard',
+    'restaurants',
 
 )
 

@@ -12,7 +12,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from accounts.forms import UserForm
+from accounts.forms import UserForm, UserCreationForm
 
 def login(request):
     context = {}
@@ -21,14 +21,30 @@ def login(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             auth_login(request,user)
-        
-        return HttpResponseRedirect(reverse('fueled.views.home'))
+            return HttpResponseRedirect(reverse('fueled.views.home'))
+        else:
+            return HttpResponse("Login Failed")
 
     context['user_form'] = UserForm()
     return render_to_response('login.html', RequestContext(request, context))
 
 def logout(request):
-    pass
+    auth_logout(request)
+    return HttpResponse("<body>You are now logged out</body>");
 
 def new(request):
-    pass
+    context = {}
+    if request.method == "POST":
+        userform = UserCreationForm(data=request.POST)
+        if userform.is_valid():
+            User.objects.create_user(userform.cleaned_data['username'], 
+                                     userform.cleaned_data['email'],
+                                     userform.cleaned_data['password'])
+            return HttpResponseRedirect(reverse('accounts.views.login'))
+        else:
+            print userform.errors
+        pass
+
+    context['new_user_form'] = UserCreationForm()
+    return render_to_response("new.html", RequestContext(request, context))
+
