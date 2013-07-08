@@ -3,5 +3,35 @@
 {% block content %}
 <body>
 <div><h3>Welcome {{user.username}}.</h3><h5>Here is your Dashboard</h5></div>
+
+<div>
+You are a member of {{team.name}}
+<br/>
+{{team.name}} has {{team_mates_count}} members.
+<br/>
+Current Active Members:
+<ul>
+{% for member in team_mates %}
+<li>
+{{member.user.username}}  >>  {{member.user.email}}
+</li>
+{% endfor %}
+</ul>
+<br>
+{% if most_visited %}
+<h3>Your most visited restaurant is {{most_visited.restaurant.name}} with {{most_visited.visit_count}} views</h3>
+{% endif %}
+{% if team_most_visited %}
+<h3>Some of your team mates have also viewed restaurants, Heres whats trending</h3>
+<ul>
+{% for visited in team_most_visited %}
+<li>
+  {{visited.user.username}} has visited {{visited.restaurant.name}} with {{visited.visit_count}} times
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+</div>
 </body>
 {% endblock %}

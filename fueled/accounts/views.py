@@ -21,12 +21,10 @@ def login(request):
 
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
-            auth_login(request,user)
+            auth_login(request, user)
             return HttpResponseRedirect(reverse('fueled.views.home'))
-        else:
-            return HttpResponse("Login Failed")
-
-    context['user_form'] = UserForm()
+    if 'user_form' not in context:
+        context['user_form'] = UserForm()
     return render_to_response('login.html', RequestContext(request, context))
 
 def logout(request):

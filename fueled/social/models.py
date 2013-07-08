@@ -15,6 +15,10 @@ class RestaurantComment(BaseModel):
     restaurant = models.ForeignKey(Restaurant)
     comment = models.CharField(max_length=255)
 
+class RestaurantVisits(BaseModel):
+    user = models.ForeignKey(User)
+    restaurant = models.ForeignKey(Restaurant)
+    visit_count = models.IntegerField(max_length=11)
 
 class Team(BaseModel):
     name = models.CharField(max_length=100)

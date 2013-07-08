@@ -17,6 +17,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from restaurants.forms import RestaurantForm
 from restaurants.models import Restaurant
+from social.models import RestaurantVisits
+
 
 @login_required
 def create(request):
@@ -37,7 +39,23 @@ def create(request):
 
 @login_required
 def show(request, restaurant_id):
-    pass
+    context = {
+        'restaurant': Restaurant.objects.get(pk=restaurant_id)
+    }
+    
+    visit_counter = None
+    try:
+        visit_counter = RestaurantVisits.objects.get(user=request.user, restaurant=context['restaurant'])
+        visit_counter.visit_count += 1
+    except Exception as e:
+        visit_counter = RestaurantVisits(user=request.user, 
+                                         restaurant=context['restaurant'],
+                                         visit_count=1)
+    
+    visit_counter.save()
+    context['visit_counter'] = visit_counter
+    
+    return render_to_response('show.html', RequestContext(request, context))
 
 @login_required
 def all(request):

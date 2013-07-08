@@ -7,10 +7,10 @@
     
 {% for restaurant in restaurants %}
     <tr>
-      <td>{{restaurant.name}}</td>
-      <td>{{restaurant.address}}</td>
-      <td>{{restaurant.phone|format_phone:'-'}}</td>
-      <td>{{restaurant.cuisine_type}}</td>
+      <td><a href="/restaurants/{{restaurant.pk}}/">{{restaurant.name}}</a></td>
+      <td>{{ restaurant.address }}</td>
+      <td>{{ restaurant.phone|format_phone:'-' }}</td>
+      <td>{{ restaurant.cuisine_type }}</td>
     </tr>
 {% endfor %}
   </tbody>

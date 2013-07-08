@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+<center>
+  <h3>{{restaurant.name}}</h3>
+  <h1>{{restaurant.address}}</h1>
+  <h1>{{restaurant.phone}}</h1>
+  <h1>{{restaurant.cuisine_type</h1>
+</center>
+</body>
+{% endblock %}
