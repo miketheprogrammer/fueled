@@ -15,12 +15,20 @@ from django.views.decorators.csrf import csrf_protect
 from accounts.forms import UserForm
 
 def login(request):
-    context = {'user_form': UserForm()}
+    context = {}
     if request.method == "POST":
-        return HttpResponse("Not Implemented Yet")
 
-    
+        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            auth_login(request,user)
+        
+        return HttpResponseRedirect(reverse('fueled.views.home'))
+
+    context['user_form'] = UserForm()
     return render_to_response('login.html', RequestContext(request, context))
 
 def logout(request):
+    pass
+
+def new(request):
     pass

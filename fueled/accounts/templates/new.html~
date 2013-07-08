@@ -3,7 +3,7 @@
 {% block content %}
 <body>
 <form method="POST" action="/accounts/login/">
-{{ user_form.as_ul }}
+{{ new_user_form.as_ul }}
 <input type="submit" value="submit"/>
 
 <a href="/accounts/new/">Dont have an account? Create One</a>
