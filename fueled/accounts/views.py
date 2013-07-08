@@ -13,7 +13,8 @@ from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from accounts.forms import UserForm, UserCreationForm
-
+from accounts.models import TeamUser
+from social.models import Team
 def login(request):
     context = {}
     if request.method == "POST":
@@ -37,9 +38,17 @@ def new(request):
     if request.method == "POST":
         userform = UserCreationForm(data=request.POST)
         if userform.is_valid():
-            User.objects.create_user(userform.cleaned_data['username'], 
+            user = User.objects.create_user(userform.cleaned_data['username'], 
                                      userform.cleaned_data['email'],
                                      userform.cleaned_data['password'])
+            try:
+                team = Team.objects.get(name=request.POST['team'])
+            except:
+                team = Team(name=request.POST['team'])
+                team.save()
+            team_user = TeamUser(team=team, user=user)
+            team_user.save()
+                
             return HttpResponseRedirect(reverse('accounts.views.login'))
         else:
             print userform.errors

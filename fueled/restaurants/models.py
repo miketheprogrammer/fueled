@@ -2,8 +2,6 @@ from django.db import models
 from base.models import BaseModel
 # Create your models here.
 
-
-
 class Restaurant(BaseModel):
     cuisine_type_choices = (
         ('american', 'American'),

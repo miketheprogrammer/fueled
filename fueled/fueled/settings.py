@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'base',
     'dashboard',
     'restaurants',
+    'social',
 
 )
 
