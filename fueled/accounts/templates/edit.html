@@ -2,13 +2,16 @@
 
 {% block content %}
 <body>
+
 <form method="POST" action="/accounts/edit/" class="form-signin">
+<h4>Edit/Change Your User Information</h4>
 {{ form.as_ul }}
 <li>
 <label for="id_team">Team Name:</label> 
 <input type="text" id="id_team" name="team" default="Enter Team Name Here"/>
 </li>
-<input type="submit" value="submit"/>
+<button class="btn btn-large btn-primary pull-right" type="submit">Submit</button>
+
 {% csrf_token %}
 {{form.errors}}
 </form>

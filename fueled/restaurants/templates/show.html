@@ -44,8 +44,6 @@ left:90%;
        <center>     <legend>Comments</legend> </center>
 
       <div class="row">
-
-          
         <div class="span6 center" style="">
           <div class="well">
             <p>This is a comment</p>
@@ -58,24 +56,18 @@ left:90%;
             </p>
           </div>
         </div>
-
       </div>
-      <div class="row">
-
-
+      <div class="row" id="comment-submit">
         <div class="span6 center" style="">
           <div class="well">
-            <form class="signin-form">
-              <textarea name="message" style="width:100%" rows="5"></textarea>
-              <button class="btn btn-large btn-primary pull-right" type="submit">Submit</button>
-              </form>
+            <div class="signin-form">
+              <textarea id="id_comment" name="comment" style="width:100%" rows="5"></textarea>
+              <button id="submit" class="btn btn-large btn-primary pull-right">Submit</button>
+              </div>
            </div>
 
         </div>
         </div>
-        
-
-        
       </div>
 
 <script type="text/javascript">
@@ -92,6 +84,14 @@ $(document).ready(function() {
     $.getJSON("/social/thumbs/toggle/{{restaurant.pk}}/?v="+thumbState, function(response) {
       console.log(response);
     });
+  });
+
+  $("#submit").on('click', function() {
+    var cmt = $("#id_comment").val();
+    var username = '{{user.username}}';
+    
+    $('#comment-submit').before("<div class='row'><div class='span6 center' style=''><div class='well'><p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p></div></div></div>");
+    $("#id_comment").val("");
   });
 });
 </script>
