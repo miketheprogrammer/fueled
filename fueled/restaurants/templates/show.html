@@ -1,16 +1,29 @@
 {% extends "base.html" %}
+
+{% block content %}
 <style>
 .item-box i{
- width:100px;
- height:100px;
+ width:200px;
+ height:200px;
 }
-.icon-larger:before
+.thumb-red
 {
 color:red;
 }
+.thumb-black {
+color:black;
+}
+.author {
+float:right;
+left:90%;
+}
+
+.row-fluid [class*="span"].center, .center {
+    margin: 0 auto;
+    float: none;
+}
 </style>
-{% block content %}
-<body>
+<div class="hero-unit">
 <center>
   <h1>{{restaurant.name}}</h1>
   <h3>{{restaurant.address}}</h3>
@@ -23,13 +36,52 @@ color:red;
 
   <div class="item-box">
     
-    <i id="thumbs" class="icon-thumbs-{% if thumbsdown %}down{% else %}up{% endif %}-alt icon-larger"></i>(click to change)
+    <i id="thumbs" class="icon-thumbs-down-alt icon-larger {% if thumbsdown %}thumb-red{% else %}thumb-black{% endif %}"></i>(click to change)
   </div>
 </center>
+</div>
+
+       <center>     <legend>Comments</legend> </center>
+
+      <div class="row">
+
+          
+        <div class="span6 center" style="">
+          <div class="well">
+            <p>This is a comment</p>
+            <br/>
+            <p class="author pull-right" style="">
+              by: 
+              <strong>
+                <i>mhernandezasdasdasdasddas</i>
+              </strong>
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+
+
+        <div class="span6 center" style="">
+          <div class="well">
+            <form class="signin-form">
+              <textarea name="message" style="width:100%" rows="5"></textarea>
+              <button class="btn btn-large btn-primary pull-right" type="submit">Submit</button>
+              </form>
+           </div>
+
+        </div>
+        </div>
+        
+
+        
+      </div>
+
 <script type="text/javascript">
 thumbStates = {
-    false:"icon-thumbs-up-alt",
-    true:"icon-thumbs-down-alt",
+    false:"thumb-black",
+    true:"thumb-red",
 }
 thumbState = {% if thumbsdown %}true{% else %}false{% endif %};
 console.log(thumbState);
@@ -43,5 +95,4 @@ $(document).ready(function() {
   });
 });
 </script>
-</body>
 {% endblock %}
