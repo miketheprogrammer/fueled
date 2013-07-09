@@ -9,5 +9,5 @@ def home(request):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('dashboard.views.index'))
 
-    return HttpResonseRedirect(reverse('accounts.views.login'))
+    return HttpResponseRedirect(reverse('accounts.views.login'))
 

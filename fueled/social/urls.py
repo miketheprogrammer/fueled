@@ -6,8 +6,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^login/', 'accounts.views.login'),
-    url(r'^logout/', 'accounts.views.logout'),
-    url(r'^new/', 'accounts.views.new'),
-    url(r'^edit/', 'accounts.views.edit'),
+    url(r'^thumbs/toggle/(?P<restaurant_id>[0-9]*)/$', 'social.views.thumbs_toggle'),
+    url(r'', 'social.views.team'),
+    
 )

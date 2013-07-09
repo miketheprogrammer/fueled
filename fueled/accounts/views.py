@@ -12,13 +12,15 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from accounts.forms import UserForm, UserCreationForm
+from accounts.forms import UserForm, UserCreationForm, UserEditForm
 from accounts.models import TeamUser
 from social.models import Team
+
 def login(request):
     context = {}
+    if request.user and request.user.is_authenticated():
+        return HttpResponseRedirect(reverse("dashboard.views.index"))
     if request.method == "POST":
-
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             auth_login(request, user)
@@ -29,7 +31,7 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    return HttpResponse("<body>You are now logged out</body>");
+    return HttpResponseRedirect(reverse("accounts.views.login"));
 
 def new(request):
     context = {}
@@ -55,3 +57,41 @@ def new(request):
     context['new_user_form'] = UserCreationForm()
     return render_to_response("new.html", RequestContext(request, context))
 
+
+@login_required
+def edit(request):
+    context = {}
+    edit_form = UserEditForm(instance=request.user)
+    if request.method == "POST":
+        userform = UserEditForm(data=request.POST, instance=request.user)
+        if userform.is_valid():
+            
+            try:
+                team = Team.objects.get(name=request.POST['team'])
+            except:
+                team = Team.objects.create(name=request.POST['team'])
+            try:
+                old_team = TeamUser.objects.get(user=request.user)
+            except:
+                old_team = TeamUser.objects.none()
+
+
+            if not old_team or old_team.team.name != team.name:
+                old_team.delete()
+                print old_team
+                team_user = TeamUser.objects.create(team=team, user=request.user)
+            
+            
+            user = userform.save()
+            user.set_password(user.password)
+            user.email = request.POST['email']
+            user.first_name = request.POST['first_name']
+            user.last_name = request.POST['last_name']
+            user.save();
+            
+            return HttpResponseRedirect(reverse('dashboard.views.index'))
+        else:
+            edit_form = userform
+            print userform.errors
+        pass
+    return render_to_response('edit.html', RequestContext(request, {'form': edit_form}))

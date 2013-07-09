@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
-<div><h3>Welcome {{user.username}}.</h3><h5>Here is your Dashboard</h5></div>
+    <div class="container">
 
-<div>
-You are a member of {{team.name}}
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1><div><h3>Welcome {{user.username}}.</h3><h5>Here is your Dashboard</h5></div></h1>
+        <p></p>
+
+       
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>Team Info</h2>
+          <p>You are a member of {{team.name}}
 <br/>
 {{team.name}} has {{team_mates_count}} members.
 <br/>
@@ -16,22 +26,55 @@ Current Active Members:
 {{member.user.username}}  >>  {{member.user.email}}
 </li>
 {% endfor %}
-</ul>
-<br>
-{% if most_visited %}
-<h3>Your most visited restaurant is {{most_visited.restaurant.name}} with {{most_visited.visit_count}} views</h3>
+</ul></p>
+        </div>
+        <div class="span4">
+          <h2>Most Visited Restaurant</h2>
+          <p>{% if most_visited %}
+    Your most visited restaurant is {{most_visited.restaurant.name}} with {{most_visited.visit_count}} views
 {% endif %}
-{% if team_most_visited %}
-<h3>Some of your team mates have also viewed restaurants, Heres whats trending</h3>
+</p>
+
+       </div>
+        <div class="span4">
+          <h2>Trending</h2>
+          <p>{% if team_most_visited %}
+    Some of your team mates have also viewed restaurants, Heres whats trending
 <ul>
 {% for visited in team_most_visited %}
 <li>
-  {{visited.user.username}} has visited {{visited.restaurant.name}} with {{visited.visit_count}} times
+  {{visited.user.username}} has visited {{visited.restaurant.name}} with {{visited.visit_count}} views
 </li>
 {% endfor %}
 </ul>
-{% endif %}
+{% endif %}</p>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4"></div>
+        <div class="span4">        
+          <h2>Recommendations</h2>
+          Your team should eat out at: {{recommendation.name}}
+          <br>
+          Located @ {{recommendation.address}}
+          <br/>
+          <p><a class="btn" href="/restaurants/{{recommendation.pk}}">View Restaurant &raquo;</a></p>
+        </div>
+        <div class="span4"></div>
+        </div>
+
+      <hr>
+
+    </div> <!-- /container -->
+
+
+<div>
+
+
+<br>
+
 
 </div>
-</body>
+
 {% endblock %}

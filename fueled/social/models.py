@@ -9,6 +9,10 @@ class RestaurantLike(BaseModel):
     user = models.ForeignKey(User)
     restaurant = models.ForeignKey(Restaurant)
 
+class RestaurantThumbsDown(BaseModel):
+    user = models.ForeignKey(User)
+    restaurant = models.ForeignKey(Restaurant)
+
 #cannot extend RestaurantLike here because RestaurantLike is not abstract.
 class RestaurantComment(BaseModel):
     user = models.ForeignKey(User)

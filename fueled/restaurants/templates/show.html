@@ -1,5 +1,14 @@
 {% extends "base.html" %}
-
+<style>
+.item-box i{
+ width:100px;
+ height:100px;
+}
+.icon-larger:before
+{
+color:red;
+}
+</style>
 {% block content %}
 <body>
 <center>
@@ -11,7 +20,28 @@
   <br/>
   <br/>
   <h5>You have visited this restaurant {{visit_counter.visit_count}} times.</h5>
-  
+
+  <div class="item-box">
+    
+    <i id="thumbs" class="icon-thumbs-{% if thumbsdown %}down{% else %}up{% endif %}-alt icon-larger"></i>(click to change)
+  </div>
 </center>
+<script type="text/javascript">
+thumbStates = {
+    false:"icon-thumbs-up-alt",
+    true:"icon-thumbs-down-alt",
+}
+thumbState = {% if thumbsdown %}true{% else %}false{% endif %};
+console.log(thumbState);
+$(document).ready(function() {
+  $("#thumbs").on('click', function() {
+    thumbState = !thumbState;
+    $(this).removeClass(thumbStates[!thumbState]).addClass(thumbStates[thumbState]);
+    $.getJSON("/social/thumbs/toggle/{{restaurant.pk}}/?v="+thumbState, function(response) {
+      console.log(response);
+    });
+  });
+});
+</script>
 </body>
 {% endblock %}

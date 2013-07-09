@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1><div><h3>Welcome {{user.username}}.</h3><h5>Here is your Dashboard</h5></div></h1>
+        <p></p>
+
+       
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span12">
+          <h2>Team Info</h2>
+          <p>You are a member of {{team.name}}
+<br/>
+{{team.name}} has {{team_mates_count}} members.
+<br/>
+Current Active Members:
+<ul>
+{% for member in team_mates %}
+<li>
+{{member.user.username}}  >>  {{member.user.email}}
+</li>
+{% endfor %}
+</ul></p>
+        </div>
+      </div>
+
+      <hr>
+
+    </div> <!-- /container -->
+
+
+<div>
+
+
+
+<br>
+
+
+</div>
+
+{% endblock %}
