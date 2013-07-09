@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
-
+<div class="hero-unit">
 <form method="POST" action="/accounts/edit/" class="form-signin">
 <h4>Edit/Change Your User Information</h4>
 {{ form.as_ul }}
@@ -15,5 +14,5 @@
 {% csrf_token %}
 {{form.errors}}
 </form>
-</body>
+</div>
 {% endblock %}

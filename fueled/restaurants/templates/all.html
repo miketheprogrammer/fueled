@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load formatting %}
 {% block content %}
-<body>
+
+<div class="hero-unit">
+<center>
 <table border="1">
   <tbody>
     
@@ -15,6 +17,7 @@
 {% endfor %}
   </tbody>
 </table>
+
 <div>
     <span>
         {% if restaurants.has_previous %}
@@ -30,5 +33,6 @@
         {% endif %}
     </span>
 </div>
-</body>
+</center>
+</div>
 {% endblock %}
