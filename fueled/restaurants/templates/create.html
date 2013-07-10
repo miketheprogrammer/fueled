@@ -41,23 +41,30 @@ $("#id_address").on("blur", function() {
         $("#myModal").modal("toggle");
       } else {
         $("#id_address").css("color", "red");
-        $("#id_address").after("<p style='color:red;'>Address could not be normalize</p>");
+        $("#id_address").after("<p class='error' style='color:red;'>Address could not be normalize</p>");
       }
 
       });
 } else {
         $("#id_address").css("color", "red");
-        $("#id_address").after("<p style='color:red;'>Address is not long enough</p>");
+        $("#id_address").after("<p class='error' style='color:red;'>Address is not long enough</p>");
 }
 });
 $("#btn-confirm").on("click", function() {
   var addr = data[0];
+  //Restore the color to black if their were any errors
   $("#id_address").css("color", "black");
+  //Remove all the error messages
+  $(".error").remove();
+  //Update the inputs
   $("#id_address").val(addr.delivery_line_1 + " " + addr.last_line);
   $("#id_latitude").val(addr.metadata.latitude);
   $("#id_longitude").val(addr.metadata.longitude);
+  //Turn of the modal
   $("#myModal").modal("toggle");
+  //Remove the normalization event
   $("#id_address").off("blur");
+
 });
 });
 </script>
