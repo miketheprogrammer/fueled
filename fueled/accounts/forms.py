@@ -10,8 +10,8 @@ class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         
-        self.fields['username'].widget = forms.TextInput(attrs={'class':'input-block-level'})
-        self.fields['password'].widget = forms.PasswordInput(attrs={'class':'input-block-level'})
+        self.fields['username'].widget = forms.TextInput(attrs={'class':'input-block-level', 'required':True})
+        self.fields['password'].widget = forms.PasswordInput(attrs={'class':'input-block-level', 'required':True})
 
 
 class UserCreationForm(UserForm):
@@ -20,7 +20,7 @@ class UserCreationForm(UserForm):
         fields = ("username", "password", "password_confirm",  "email")
 
     password_confirm = forms.CharField(label="Password confirmation", 
-                                       widget=forms.PasswordInput(attrs={'class':'input-block-level'}),
+                                       widget=forms.PasswordInput(attrs={'class':'input-block-level', 'required':True}),
                                        help_text="Must be same as above.",
                                        required=True)
 

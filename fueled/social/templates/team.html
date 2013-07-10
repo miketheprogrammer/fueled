@@ -16,7 +16,7 @@ Current Active Members:
 <ul>
 {% for member in team_mates %}
 <li>
-{{member.user.username}}  >>  {{member.user.email}}
+{{member.user.username}}  >>  {{member.user.email}}. Favorite cuisine type: {{member.user.get_profile.favorite_cuisine}}
 </li>
 {% endfor %}
 </ul></p>

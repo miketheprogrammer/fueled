@@ -33,7 +33,9 @@ class BaseRecommendationEngine(object):
     3 - Random selection from Team Top Choices with a Random Restaurant.
     4 - Random selection from Team Top Choices with a small possibility of a Random Restaurant
         however, if the top choices amount to less than 1 top choice, the recommendation must be random
-    4 - Random selection from Team Top Choices, Weighted on First Two Top Choices, with a Random Restaurant
+        final chance of random restaurant is (1 in 3) chance that you will have a (1 in len(top_choices+1) chance to select a random restaurant. This is a good jitter level for small teams, but may not be optimal for larger teams that want to explore a little.
+
+    5 - Random selection from Team Top Choices, Weighted on First Two Top Choices, with a Random Restaurant
     
     ** In Respect to number 3, the restaurants table is currently denormalized, 
     but in an actual system we would use Location to limit the select first, and then use cuisine types 
@@ -62,7 +64,7 @@ class BaseRecommendationEngine(object):
             
         
         if self.jitter_level == 4:
-            if random.randint(0,5) == 3 or len(top_choices) < 1:
+            if random.randint(0,2) == 1 or len(top_choices) < 1:
                 
                 try:
                     index = random.randint(1, len(self.restaurants))

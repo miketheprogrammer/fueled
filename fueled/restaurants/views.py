@@ -29,7 +29,7 @@ def create(request):
         restaurant_form = RestaurantForm(data=request.POST)
         if restaurant_form.is_valid():
             restaurant = restaurant_form.save()
-            return HttpResponse('Restaurant Saved')
+            return HttpResponseRedirect("/restaurants/all")
         else:
             context['restaurant_form'] = restaurant_form
 
@@ -73,10 +73,11 @@ def all(request):
     page = request.GET.get('page', None)
     if page is None:
         page = 1
+
     restaurants = Paginator(Restaurant.objects.all(), 10)
 
-    if page <= restaurants.num_pages:
-        restaurants = restaurants.page(page)
+
+    restaurants = restaurants.page(page)
 
     context = {
         'restaurants': restaurants,

@@ -19,6 +19,7 @@
 </table>
 
 <div>
+<!-- base pagination html code quickly taken from stack overflow in modifications -->
     <span>
         {% if restaurants.has_previous %}
             <a href="?page={{ restaurants.previous_page_number }}">previous</a>
@@ -28,7 +29,7 @@
             Page {{ restaurants.number }} of {{ restaurants.paginator.num_pages }}.
         </span>
 
-        {% if contacts.has_next %}
+        {% if restaurants.has_next %}
             <a href="?page={{ restaurants.next_page_number }}">next</a>
         {% endif %}
     </span>

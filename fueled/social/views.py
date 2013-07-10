@@ -23,7 +23,6 @@ def team(request):
     team_user = TeamUser.objects.get(user=request.user)
     team = team_user.team
     team_mates = TeamUser.objects.filter(team=team)
-
     context = {
         'team_user': team_user,
         'team_mates': team_mates,
