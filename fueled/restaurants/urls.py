@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^(?P<restaurant_id>[0-9]*)/$', 'restaurants.views.show'),
     url(r'^create/$', 'restaurants.views.create'),
     url(r'^all/$', 'restaurants.views.all'),
+    url(r'^geocode/$', 'restaurants.views.geocode'),
 )

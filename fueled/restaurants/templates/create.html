@@ -1,12 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
+
 <form method="POST" action="/restaurants/create/">
 {{ restaurant_form.as_ul }}
 <input type="submit" value="submit"/>
 
 {% csrf_token %}
 </form>
-</body>
+<a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+ 
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Modal header</h3>
+  </div>
+  <div class="modal-body">
+    <p We have found an address that should match the one you entered </p>
+    <p id="address-normalized">One fine body…</p>
+    <p> Please confirm that this is the proper address </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button id="btn-confirm" class="btn btn-primary">Confirm</button>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#id_address").on("blur", function() {
+  var street = $(this).val();
+  if ( street != "" && street.split(" ").length > 2) {
+      $.getJSON("/restaurants/geocode/?q="+street, function(response) {
+      data = response;
+      if (data.length >= 1) {
+        var addr = data[0];
+        $("#address-normalized").html(addr.delivery_line_1 + " " + addr.last_line);
+        $("#myModal").modal("toggle");
+      } else {
+        $("#id_address").css("color", "red");
+        $("#id_address").after("<p style='color:red;'>Address could not be normalize</p>");
+      }
+
+      });
+} else {
+        $("#id_address").css("color", "red");
+        $("#id_address").after("<p style='color:red;'>Address is not long enough</p>");
+}
+});
+$("#btn-confirm").on("click", function() {
+  var addr = data[0];
+  $("#id_address").css("color", "black");
+  $("#id_address").val(addr.delivery_line_1 + " " + addr.last_line);
+  $("#id_latitude").val(addr.metadata.latitude);
+  $("#id_longitude").val(addr.metadata.longitude);
+  $("#myModal").modal("toggle");
+  $("#id_address").off("blur");
+});
+});
+</script>
 {% endblock %}

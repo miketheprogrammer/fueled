@@ -15,10 +15,11 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from django.utils import simplejson
 from restaurants.forms import RestaurantForm
 from restaurants.models import Restaurant
 from social.models import RestaurantVisits, RestaurantThumbsDown, RestaurantReview, RestaurantComment
-
+import urllib
 
 @login_required
 def create(request):
@@ -82,3 +83,14 @@ def all(request):
         'page': page,
     }
     return render_to_response('all.html', RequestContext(request, context))
+
+def geocode(request):
+    address = urllib.quote_plus(request.GET.get('q'))
+    auth_token = "3Nm6yUp4ex3Tp3buS2mpJvA18dfmmc07fQrSeY5h542kWPzW4zPPYcW6bkQyTzamdzVy%2BuYSFKfrBgor2DnLFQ%3D%3D"
+    auth_id = "e64dcb80-50a7-47f1-91e4-a376d5e221e1"
+    request = "https://api.smartystreets.com/street-address?street=%s&candidates=1&auth-id=%s&auth-token=%s" % ( address, auth_id, auth_token )
+    data = simplejson.loads(urllib.urlopen(request).read())
+    print data
+    return HttpResponse(simplejson.dumps(data))
+
+    
