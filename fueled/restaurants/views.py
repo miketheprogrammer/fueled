@@ -17,7 +17,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from restaurants.forms import RestaurantForm
 from restaurants.models import Restaurant
-from social.models import RestaurantVisits, RestaurantThumbsDown
+from social.models import RestaurantVisits, RestaurantThumbsDown, RestaurantReview, RestaurantComment
 
 
 @login_required
@@ -61,6 +61,8 @@ def show(request, restaurant_id):
         context['thumbsdown'] = True
     except:
         context['thumbsdown'] = False
+
+    context['reviews'] = RestaurantReview.objects.filter(restaurant=context['restaurant'])
     
     return render_to_response('show.html', RequestContext(request, context))
 

@@ -50,22 +50,50 @@ color:yellow;
 
        <center>     <legend>Reviews</legend> </center>
        
-      
-      <div class="row">
+      {% for review in reviews %}
+      <div class="row" id="{{review.pk}}">
         <div class="span6 center" style="">
-          
           <div class="well">
-            <p>This is a review</p>
+            <i class="icon-star star-yellow"></i>
+            <i class="icon-star star-yellow"></i>
+            <i class="icon-star star-yellow"></i>
+            <i class="icon-star star-yellow"></i>
+            <i class="icon-star-empty star-black"></i>
+            <p>{{review.text}}</p>
             <br/>
             <p class="author pull-right" style="">
               by: 
               <strong>
-                <i>mhernandez</i>
+                <i>{{review.user.username}}</i>
               </strong>
             </p>
+            <br/>
+            <h4>Comments</h4>
+            {% for comment in review.restaurantcomment_set.all %}
+            <div class="well" id="">
+              <p>{{comment.text}}</p>
+              <br/>
+              <p class="author pull-right" style="">
+                by: 
+                <strong>
+                  <i>{{comment.user.username}}</i>
+                </strong>
+              </p>
+              <br/>
+            </div>
+            {% endfor %}
+            <div class="well" id="comment-submit" data-review-id="{{review.pk}}">
+              <div class="signin-form">
+                <textarea id="id_comment" name="comment" style="width:100%" rows="3" data-review-id="{{review.pk}}"></textarea>
+                <button id="submit-comment" class="btn btn-large btn-primary pull-right submit-comment" data-review-id="{{review.pk}}">Submit</button>
+              </div>
+            </div>
+            
+           </div>
           </div>
         </div>
       </div>
+      {% endfor %}
       <div class="row" id="review-submit">
         <div class="span6 center" style="">
           <div class="well">
@@ -101,6 +129,12 @@ window.starLastIndex = 0;
 thumbState = {% if thumbsdown %}true{% else %}false{% endif %};
 console.log(thumbState);
 $(document).ready(function() {
+window.loadEventHandlers = function(){
+
+  $("#thumbs").off("click");
+  $(".star-toggleable").off("click");
+  $("#submit").off("click");
+  $(".submit-comment").off("click");
   $("#thumbs").on('click', function() {
     var thumbState = !thumbState;
     $(this).removeClass(thumbStates[!thumbState]).addClass(thumbStates[thumbState]);
@@ -120,38 +154,66 @@ $(document).ready(function() {
     //Where does out star lie, and what is the expected behavior.
     var index = parseInt($(this).attr("data-index"));
     
-    if (window.starLastIndex < index) {
+    if ($("i[data-state='true']").length > index) {
+      for (var i=5; i>index; i--) {
+        var starHandle = $("#star"+i);
+        starHandle.attr("data-state", false);
+        starHandle.removeClass(starStates[true]).addClass(starStates[false]);
+      }
+    }    
+    else if (window.starLastIndex < index) {
       for (var i=1; i<=index; i++) {
         var starHandle = $("#star"+i);
         starHandle.attr("data-state", true);
         starHandle.removeClass(starStates[false]).addClass(starStates[true]);
       }
     }
-
-    if ($(".star-yellow").length > index) {
-      for (var i=5; i>=index; i--) {
-        var starHandle = $("#star"+i);
-        starHandle.attr("data-state", true);
-        starHandle.removeClass(starStates[true]).addClass(starStates[false]);
-      }
-    }    
-                              
+    else {
+      $(this).attr("data-state", state);
+      $(this).removeClass(starStates[!state]).addClass(starStates[state]);
     
+    }
 
-
-    $(this).attr("data-state", state);
-    $(this).removeClass(starStates[!state]).addClass(starStates[state]);
-    
-
+    starLastIndex = index;
   });
 
   $("#submit").on('click', function() {
     var cmt = $("#id_review").val();
     var username = '{{user.username}}';
     
-    $("#review-submit").before("<div class='row'><div class='span6 center' style=''><div class='well'><p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p></div></div></div>");
+    var rating = $("i[data-state='true']").length;
+    star_html = "";
+    for (var i=1; i < rating + 1; i++){
+      star_html += "<i class='icon-star star-yellow'></i>"
+    }
+    for (var i=rating; i<5; i++) {
+      star_html += "<i class='icon-star-empty star-black'></i>"
+    }
+
+
+    $.getJSON("/social/review/add/{{restaurant.pk}}/?t="+cmt+"&rating="+rating, function(response){
+      console.log(response);
+    $("#review-submit").before("<div class='row' id='"+response.review_id+"'><div class='span6 center' style=''><div class='well'>"+star_html+"<p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p><br/><h4>Comments</h4><div class='well' id='comment-submit' data-review-id='"+response.review_id+"'><div class='signin-form'><textarea id='id_comment' name='comment' style='width:100%' rows='3' data-review-id='"+response.review_id+"'></textarea><button id='submit-comment' class='btn btn-large btn-primary pull-right submit-comment' data-review-id='"+response.review_id+"'>Submit</button></div></div></div></div></div>");
     $("#id_review").val("");
+    loadEventHandlers();
+    });
+
+  
+
   });
+
+  $(".submit-comment").on("click", function() {
+    var reviewId = $(this).attr("data-review-id");
+    var cmt = $("#id_comment[data-review-id='"+ reviewId +"']").val();
+    $("#comment-submit[data-review-id='"+reviewId+"']").before("<div class='well'><p>"+cmt+"</p><br/><p class='author pull-right' style=''>by: <strong><i>{{user.username}}</i></strong></p></div>");
+     
+    $("#id_comment[data-review-id='"+ reviewId +"']").val("");
+    $.getJSON("/social/review/comments/add/"+reviewId+"/?t="+cmt, function(response){
+      console.log(response);
+    });
+  });
+}
+loadEventHandlers();
 });
 </script>
 {% endblock %}

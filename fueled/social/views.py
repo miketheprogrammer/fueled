@@ -14,7 +14,7 @@ from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from accounts.models import TeamUser
-from social.models import RestaurantVisits, RestaurantThumbsDown
+from social.models import RestaurantVisits, RestaurantThumbsDown, RestaurantReview, RestaurantComment
 from restaurants.models import Restaurant
 from django.utils import simplejson
 
@@ -53,7 +53,23 @@ def thumbs_toggle(request, restaurant_id):
             RestaurantThumbsDown.objects.create(user=request.user, restaurant=restaurant)
             response = True
 
-    return HttpResponse(simplejson.dumps({"success":response}))
+    return HttpResponse(simplejson.dumps({"success": response}))
 
 
+@login_required
+def add_review(request, restaurant_id):
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
+    rating = request.GET.get('rating')
+    text = request.GET.get('t')
+    review = RestaurantReview.objects.create(user=request.user, text=text, restaurant=restaurant, rating=rating)
+    return HttpResponse(simplejson.dumps({"success": True, "review_id": review.pk}))
+
+@login_required
+def add_review_comment(request, review_id):
+    review = RestaurantReview.objects.get(pk=review_id)
+    text = request.GET.get('t')
+
+    comment = RestaurantComment.objects.create(text=text, restaurant_review=review, user=request.user)
+    return HttpResponse(simplejson.dumps({"success": True, "comment_id": comment.pk}))
     
+
