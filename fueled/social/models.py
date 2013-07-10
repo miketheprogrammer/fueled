@@ -13,10 +13,17 @@ class RestaurantThumbsDown(BaseModel):
     user = models.ForeignKey(User)
     restaurant = models.ForeignKey(Restaurant)
 
+
+class RestaurantReview(BaseModel):
+    user = models.ForeignKey(User)
+    restaurant = models.ForeignKey(Restaurant)
+    stars = models.IntegerField(max_length=1)
+
+
 #cannot extend RestaurantLike here because RestaurantLike is not abstract.
 class RestaurantComment(BaseModel):
     user = models.ForeignKey(User)
-    restaurant = models.ForeignKey(Restaurant)
+    restaurant_review = models.ForeignKey(RestaurantReview)
     comment = models.CharField(max_length=255)
 
 class RestaurantVisits(BaseModel):

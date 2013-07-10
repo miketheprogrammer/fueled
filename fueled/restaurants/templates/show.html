@@ -18,6 +18,13 @@ float:right;
 left:90%;
 }
 
+.star-black {
+color:black;
+}
+.star-yellow {
+color:yellow;
+}
+
 .row-fluid [class*="span"].center, .center {
     margin: 0 auto;
     float: none;
@@ -41,27 +48,34 @@ left:90%;
 </center>
 </div>
 
-       <center>     <legend>Comments</legend> </center>
-
+       <center>     <legend>Reviews</legend> </center>
+       
+      
       <div class="row">
         <div class="span6 center" style="">
+          
           <div class="well">
-            <p>This is a comment</p>
+            <p>This is a review</p>
             <br/>
             <p class="author pull-right" style="">
               by: 
               <strong>
-                <i>mhernandezasdasdasdasddas</i>
+                <i>mhernandez</i>
               </strong>
             </p>
           </div>
         </div>
       </div>
-      <div class="row" id="comment-submit">
+      <div class="row" id="review-submit">
         <div class="span6 center" style="">
           <div class="well">
+            <i class="icon-star-empty star-black star-toggleable" id="star1" data-state="false" data-index="1"></i>
+            <i class="icon-star-empty star-black star-toggleable" id="star2" data-state="false" data-index="2"></i>
+            <i class="icon-star-empty star-black star-toggleable" id="star3" data-state="false" data-index="3"></i>
+            <i class="icon-star-empty star-black star-toggleable" id="star4" data-state="false" data-index="4"></i>
+            <i class="icon-star-empty star-black star-toggleable" id="star5" data-state="false" data-index="5"></i>
             <div class="signin-form">
-              <textarea id="id_comment" name="comment" style="width:100%" rows="5"></textarea>
+              <textarea id="id_review" name="review" style="width:100%" rows="5"></textarea>
               <button id="submit" class="btn btn-large btn-primary pull-right">Submit</button>
               </div>
            </div>
@@ -71,27 +85,72 @@ left:90%;
       </div>
 
 <script type="text/javascript">
+//State Space
 thumbStates = {
     false:"thumb-black",
     true:"thumb-red",
 }
+starStates = {
+    false:"icon-star-empty star-black star-toggleable",
+    true:"icon-star star-yellow star-toggelable",
+}
+
+//Helper Memory
+window.starLastIndex = 0;
+
 thumbState = {% if thumbsdown %}true{% else %}false{% endif %};
 console.log(thumbState);
 $(document).ready(function() {
   $("#thumbs").on('click', function() {
-    thumbState = !thumbState;
+    var thumbState = !thumbState;
     $(this).removeClass(thumbStates[!thumbState]).addClass(thumbStates[thumbState]);
     $.getJSON("/social/thumbs/toggle/{{restaurant.pk}}/?v="+thumbState, function(response) {
       console.log(response);
     });
   });
 
+  $(".star-toggleable").on("click", function() {
+
+    //Find the current state of our clicked star
+    var state = $(this).attr("data-state");
+    if (state == "false") state = true;
+    else state = false;
+    //now we have the requested state change.
+
+    //Where does out star lie, and what is the expected behavior.
+    var index = parseInt($(this).attr("data-index"));
+    
+    if (window.starLastIndex < index) {
+      for (var i=1; i<=index; i++) {
+        var starHandle = $("#star"+i);
+        starHandle.attr("data-state", true);
+        starHandle.removeClass(starStates[false]).addClass(starStates[true]);
+      }
+    }
+
+    if ($(".star-yellow").length > index) {
+      for (var i=5; i>=index; i--) {
+        var starHandle = $("#star"+i);
+        starHandle.attr("data-state", true);
+        starHandle.removeClass(starStates[true]).addClass(starStates[false]);
+      }
+    }    
+                              
+    
+
+
+    $(this).attr("data-state", state);
+    $(this).removeClass(starStates[!state]).addClass(starStates[state]);
+    
+
+  });
+
   $("#submit").on('click', function() {
-    var cmt = $("#id_comment").val();
+    var cmt = $("#id_review").val();
     var username = '{{user.username}}';
     
-    $('#comment-submit').before("<div class='row'><div class='span6 center' style=''><div class='well'><p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p></div></div></div>");
-    $("#id_comment").val("");
+    $("#review-submit").before("<div class='row'><div class='span6 center' style=''><div class='well'><p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p></div></div></div>");
+    $("#id_review").val("");
   });
 });
 </script>
