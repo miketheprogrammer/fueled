@@ -82,13 +82,14 @@ color:yellow;
               <br/>
             </div>
             {% endfor %}
+            {% if review.user.username != user.username %}
             <div class="well" id="comment-submit" data-review-id="{{review.pk}}">
               <div class="signin-form">
                 <textarea id="id_comment" name="comment" style="width:100%" rows="3" data-review-id="{{review.pk}}"></textarea>
                 <button id="submit-comment" class="btn btn-large btn-primary pull-right submit-comment" data-review-id="{{review.pk}}">Submit</button>
               </div>
             </div>
-            
+            {% endif %}
            </div>
           </div>
         </div>
