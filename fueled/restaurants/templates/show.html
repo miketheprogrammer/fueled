@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load generate %}
 {% block content %}
 <style>
 .item-box i{
@@ -54,11 +54,12 @@ color:yellow;
       <div class="row" id="{{review.pk}}">
         <div class="span6 center" style="">
           <div class="well">
-            <i class="icon-star star-yellow"></i>
-            <i class="icon-star star-yellow"></i>
-            <i class="icon-star star-yellow"></i>
-            <i class="icon-star star-yellow"></i>
-            <i class="icon-star-empty star-black"></i>
+            {% autoescape off %}
+            {{ review.rating|generate_rating_stars }}
+            {% endautoescape %}
+            {% if review.user.username == user.username %}
+            <i class="icon-user-md pull-right icon-large" style="color:green;"></i>
+            {% endif %}
             <p>{{review.text}}</p>
             <br/>
             <p class="author pull-right" style="">
