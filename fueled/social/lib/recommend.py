@@ -6,17 +6,19 @@ import random
 class BaseRecommendationEngine(object):
     def __init__(self, request, team, jitter_level=2):
         self.team_users = TeamUser.objects.filter(team=team)
+        # Lets use list comprehension to get all the ids
+        self.team_user_ids = [member.user.pk for member in self.team_users]
         self.team_most_visited = []
         
         for member in self.team_users:
             try:
-                most_visited = RestaurantVisits.objects.filter(user=member.user).order_by('-visit_count')[:1][0]
+                most_visited = RestaurantVisits.objects.exclude(restaurant__restaurantthumbsdown__user=request.user).filter(user=member.user).order_by('-visit_count')[:1][0]
                 self.team_most_visited.append(most_visited)
             except IndexError:
                 pass
             
         
-        self.restaurants = Restaurant.objects.all()
+        self.restaurants = Restaurant.objects.exclude(restaurantthumbsdown__user__in=self.team_user_ids).all()
         self.jitter_level = jitter_level
 
 
@@ -29,6 +31,8 @@ class BaseRecommendationEngine(object):
     1 - Random selection between First choice and Second choice if First choice is Definitive.
     2 - Random selection from Team Top Choices.
     3 - Random selection from Team Top Choices with a Random Restaurant.
+    4 - Random selection from Team Top Choices with a small possibility of a Random Restaurant
+        however, if the top choices amount to less than 1 top choice, the recommendation must be random
     4 - Random selection from Team Top Choices, Weighted on First Two Top Choices, with a Random Restaurant
     
     ** In Respect to number 3, the restaurants table is currently denormalized, 
@@ -43,14 +47,35 @@ class BaseRecommendationEngine(object):
     """
     def recommend(self, heuristic):
         top_choices = self._get_top_choices(heuristic)
-        if self.jitter_level == 3:
-            index = random.randint(1, len(self.restaurants))
-            random_restaurant = self.restaurants[index-1:index][0]
-            top_choices.append(random_restaurant)
+        if self.jitter_level == 2:
             return top_choices[random.randint(0, len(top_choices)-1)]
+            
+        if self.jitter_level == 3:
+            try:
+                index = random.randint(1, len(self.restaurants))
+                random_restaurant = self.restaurants[index-1:index][0]
+                top_choices.append(random_restaurant)
+            except ValueError as e:
+                # if there are no random restaurants due to thumbsdowns we just pass
+                pass
+            
+            
         
-            
-            
+        if self.jitter_level == 4:
+            if random.randint(0,5) == 3 or len(top_choices) < 1:
+                
+                try:
+                    index = random.randint(1, len(self.restaurants))
+                    random_restaurant = self.restaurants[index-1:index][0]
+                    top_choices.append(random_restaurant)
+                except ValueError as e:
+                    # if there are no random restaurants due to thumbs downs, we just pass
+                    pass
+
+        try:
+            return top_choices[random.randint(0, len(top_choices)-1)]
+        except:
+            return []
 
     """
     Heuristic is how we define top 3 choices.

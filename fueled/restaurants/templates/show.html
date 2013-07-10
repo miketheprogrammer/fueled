@@ -138,7 +138,8 @@ window.loadEventHandlers = function(){
   $("#submit").off("click");
   $(".submit-comment").off("click");
   $("#thumbs").on('click', function() {
-    var thumbState = !thumbState;
+    thumbState = !thumbState;
+    
     $(this).removeClass(thumbStates[!thumbState]).addClass(thumbStates[thumbState]);
     $.getJSON("/social/thumbs/toggle/{{restaurant.pk}}/?v="+thumbState, function(response) {
       console.log(response);

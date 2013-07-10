@@ -35,7 +35,7 @@ def index(request):
         except IndexError:
             print 'This teammate has not visited any restaurant yet'
 
-    bre = BaseRecommendationEngine(request, team, 3)
+    bre = BaseRecommendationEngine(request, team, 4)
     recommendation = bre.recommend(1)
     context = {
         'team_user': team_user,

@@ -4,12 +4,11 @@
 
 <form method="POST" action="/restaurants/create/">
 {{ restaurant_form.as_ul }}
-<input type="submit" value="submit"/>
-
+<button class="btn btn-large btn-primary" type="submit">Create</button>
 {% csrf_token %}
 </form>
-<a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
- 
+
+<!-- Basic Modal setup borrowed from twitter docs for quick creation -->
 <!-- Modal -->
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
