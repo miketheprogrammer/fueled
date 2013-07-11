@@ -5,7 +5,10 @@ import random
 
 
 """
-**Note:  I have not fully implemented the entire recommendation engine. I chose to limit the scope. Even this recommendation engine is very simple, normally i would be using alot more data, and mining it with hadoop or couchdb, and feed it into some sort of weight balancing algorithm. This however is a naive recommendation engine to demo creativity in a short timespan.
+**Note:  I have not fully implemented the entire recommendation engine. I chose to limit the scope. Eve 
+this recommendation engine is very simple, normally i would be using alot more data, and mining it with 
+hadoop or couchdb, and feed it into some sort of weight balancing algorithm. This however is a naive 
+recommendation engine to demo creativity in a short timespan.
 """
 class BaseRecommendationEngine(object):
     def __init__(self, request, team, jitter_level=2):
