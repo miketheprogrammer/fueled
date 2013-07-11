@@ -34,6 +34,12 @@
         {% endif %}
     </span>
 </div>
+{% if is_admin_user %}
+<div>
+<a href="/restaurants/create">Create a new Restaurant</a>
+</div>
+{% endif %}
+
 </center>
 </div>
 {% endblock %}

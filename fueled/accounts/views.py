@@ -49,6 +49,11 @@ def new(request):
             team_user = TeamUser(team=team, user=user)
             team_user.save()
                 
+            if request.POST.get("isadmin", False):
+                user.groups.add(Group.objects.get(name="Administrator"))
+            else:
+                user.groups.add(Group.objects.get(name="Standard User"))
+
             return HttpResponseRedirect(reverse('accounts.views.login'))
         else:
             print userform.errors

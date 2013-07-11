@@ -196,7 +196,7 @@ window.loadEventHandlers = function(){
 
     $.getJSON("/social/review/add/{{restaurant.pk}}/?t="+cmt+"&rating="+rating, function(response){
       console.log(response);
-    $("#review-submit").before("<div class='row' id='"+response.review_id+"'><div class='span6 center' style=''><div class='well'>"+star_html+"<p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p><br/><h4>Comments</h4><div class='well' id='comment-submit' data-review-id='"+response.review_id+"'><div class='signin-form'><textarea id='id_comment' name='comment' style='width:100%' rows='3' data-review-id='"+response.review_id+"'></textarea><button id='submit-comment' class='btn btn-large btn-primary pull-right submit-comment' data-review-id='"+response.review_id+"'>Submit</button></div></div></div></div></div>");
+    $("#review-submit").before("<div class='row' id='"+response.review_id+"'><div class='span6 center' style=''><div class='well'>"+star_html+"<i class='icon-user-md pull-right icon-large' style='color:green;'></i><p>"+cmt+"</p><br/><p class='author pull-right'>by: <strong><i>{{user.username}}</i></strong></p><br/></div></div></div>");
     $("#id_review").val("");
     loadEventHandlers();
     });

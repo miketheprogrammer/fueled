@@ -8,6 +8,10 @@
 <label for="id_team">Team Name:</label> 
 <input type="text" id="id_team" name="team" default="Enter Team Name Here"/>
 </li>
+<li>
+<label for="id_isadmin" style="float:left">Admin?:</label> 
+<input type="checkbox" id="id_isadmin" name="isadmin" style="display:inline-block"/>
+</li>
 <button class="btn btn-large btn-primary" type="submit">Create</button>
 {% csrf_token %}
 </form>

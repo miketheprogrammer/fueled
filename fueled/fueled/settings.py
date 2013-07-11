@@ -104,6 +104,7 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
 )
 
 ROOT_URLCONF = 'fueled.urls'
@@ -183,3 +184,14 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 AUTH_PROFILE_MODULE = "accounts.UserProfile"
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+    'django.core.context_processors.static',
+    'django.contrib.messages.context_processors.messages',
+    'accounts.context_processors.CustomAuthContext',
+    )

@@ -17,8 +17,8 @@ class BaseRecommendationEngine(object):
             except IndexError:
                 pass
             
-        
-        self.restaurants = Restaurant.objects.exclude(restaurantthumbsdown__user__in=self.team_user_ids).all()
+        self.team_most_visited_restaurant_ids = [visitcount.restaurant.pk for visitcount in self.team_most_visited]
+        self.restaurants = Restaurant.objects.exclude(restaurantthumbsdown__user__in=self.team_user_ids).exclude(pk__in=self.team_most_visited_restaurant_ids).all()
         self.jitter_level = jitter_level
 
 
