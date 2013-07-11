@@ -42,16 +42,20 @@ def new(request):
     user_form = UserCreationForm()
     user_profile_form = UserProfileForm()
     if request.method == "POST":
+        user_profile_form = UserProfileForm(data=request.POST)
+        if not user_profile_form.is_valid():
+            context['new_user_form'] = user_form
+            context['new_user_profile_form'] = user_profile_form
+            return render_to_response("new.html", RequestContext(request, context))
         user_form = UserCreationForm(data=request.POST)
         if user_form.is_valid():
-
             user = User.objects.create_user(user_form.cleaned_data['username'],
                                             user_form.cleaned_data['email'],
                                             user_form.cleaned_data['password'])
-            data = {'favorite_cuisine':request.POST.get('favorite_cuisine', 'american'),
-                    'user':user}
-            user_profile_form = UserProfileForm(data=data)
             if user_profile_form.is_valid():
+                user_profile = user_profile_form.save(commit=False)
+                user_profile.user = user
+                user_profile.save()
                 try:
                     team = Team.objects.get(name=request.POST['team'])
                 except:
@@ -69,11 +73,11 @@ def new(request):
             else:
                 raise Exception("Form not valid")
         else:
-            print userform.errors
+            print user_form.errors
         pass
 
-    context['new_user_form'] = UserCreationForm()
-    context['new_user_profile_form'] = UserProfileForm()
+    context['new_user_form'] = user_form
+    context['new_user_profile_form'] = user_profile_form
 
     return render_to_response("new.html", RequestContext(request, context))
 
