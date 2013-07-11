@@ -13,10 +13,3 @@ class UserProfile(BaseModel):
     user = models.OneToOneField(User, related_name="profile")
     favorite_cuisine = models.CharField(max_length=255, choices=Restaurant.cuisine_type_choices)
 
-def create_user_profile(sender, instance, created, **kwargs):
-    try:
-        instance.get_profile()
-    except UserProfile.DoesNotExist as e:
-        print e
-        UserProfile.objects.create(user=instance, favorite_cuisine="fusion")
-post_save.connect(create_user_profile, sender=User)

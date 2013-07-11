@@ -4,11 +4,12 @@
 <div class="hero-unit">
 <form method="POST" action="/accounts/edit/" class="form-signin">
 <h4>Edit/Change Your User Information</h4>
-{{ form.as_ul }}
+{{ edit_user_form.as_ul }}
 <li>
 <label for="id_team">Team Name:</label> 
-<input type="text" id="id_team" name="team" default="Enter Team Name Here"/>
+<input type="text" id="id_team" name="team" default="Enter Team Name Here" value="{{request.user.teamuser.team.name}}"></input>
 </li>
+{{ edit_user_profile_form.as_ul }}
 <button class="btn btn-large btn-primary pull-right" type="submit">Submit</button>
 
 {% csrf_token %}

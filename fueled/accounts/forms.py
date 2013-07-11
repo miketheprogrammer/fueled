@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm, Form
 from django.contrib.auth.models import User
-
+from accounts.models import UserProfile
+from restaurants.models import Restaurant
 class UserForm(ModelForm):
     class Meta:
         model = User
@@ -25,6 +26,7 @@ class UserCreationForm(UserForm):
                                        required=True)
 
 
+
 class UserEditForm(UserCreationForm):
     class Meta:
         model = User
@@ -35,3 +37,16 @@ class UserEditForm(UserCreationForm):
         
         self.fields['first_name'].widget = forms.TextInput(attrs={'class':'input-block-level'})
         self.fields['last_name'].widget = forms.TextInput(attrs={'class':'input-block-level'})
+
+class UserProfileForm(ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ("favorite_cuisine",)
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['favorite_cuisine'].widget = forms.Select(attrs={'class':'input-block-level', "required":True}, choices=Restaurant.cuisine_type_choices)
+
+        
+        
