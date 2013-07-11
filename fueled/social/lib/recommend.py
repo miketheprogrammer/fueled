@@ -3,6 +3,10 @@ from restaurants.models import Restaurant
 from accounts.models import TeamUser
 import random
 
+
+"""
+**Note:  I have not fully implemented the entire recommendation engine. I chose to limit the scope. Even this recommendation engine is very simple, normally i would be using alot more data, and mining it with hadoop or couchdb, and feed it into some sort of weight balancing algorithm. This however is a naive recommendation engine to demo creativity in a short timespan.
+"""
 class BaseRecommendationEngine(object):
     def __init__(self, request, team, jitter_level=2):
         self.team_users = TeamUser.objects.filter(team=team)
@@ -60,9 +64,7 @@ class BaseRecommendationEngine(object):
             except ValueError as e:
                 # if there are no random restaurants due to thumbsdowns we just pass
                 pass
-            
-            
-        
+                    
         if self.jitter_level == 4:
             if random.randint(0,2) == 1 or len(top_choices) < 1:
                 
